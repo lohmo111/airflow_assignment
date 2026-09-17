@@ -1,0 +1,8 @@
+# Python libraries the pipeline tasks need inside the Airflow image.
+pandas==2.3.3
+numpy==2.3.4
+scikit-learn==1.8.0
+joblib==1.4.2
+mlflow-skinny==3.16.0
+skops==0.15.0          # MLflow 3 serialises sklearn models with skops
+requests==2.32.3

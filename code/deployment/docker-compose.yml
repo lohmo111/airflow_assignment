@@ -1,0 +1,30 @@
+# Deployment stage: model API and web app in two separate containers.
+# Started by the Airflow DAG, or by hand from the project root:
+#   docker compose -p pmldl-deploy -f code/deployment/docker-compose.yml up -d --build
+name: pmldl-deploy
+
+services:
+  api:
+    build:
+      context: ../..
+      dockerfile: code/deployment/api/Dockerfile
+    image: pmldl-api:latest
+    container_name: pmldl-api
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ../..
+      dockerfile: code/deployment/app/Dockerfile
+    image: pmldl-app:latest
+    container_name: pmldl-app
+    ports:
+      - "8501:8501"
+    environment:
+      API_URL: http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped

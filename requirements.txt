@@ -1,2 +1,24 @@
-numpy
-pandas
+# Libraries used by the pipeline stages.
+# The Airflow image installs services/airflow/requirements.txt, and each
+# deployment container installs code/deployment/{api,app}/requirements.txt.
+# This file is the union, for running the stages in a local virtualenv.
+
+# stage 1 - data engineering
+pandas==2.3.3
+numpy==2.3.4
+
+# stage 2 - model engineering
+scikit-learn==1.8.0
+joblib==1.4.2
+mlflow==3.16.0
+skops==0.15.0
+
+# stage 3 - deployment
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+streamlit==1.41.1
+requests==2.32.3
+
+# orchestration (runs in Docker; listed for reference)
+apache-airflow==2.10.5

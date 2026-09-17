@@ -1,0 +1,63 @@
+# Orchestration services: Airflow (scheduler + UI) and the MLflow tracking server.
+# Start from the project root:
+#   docker compose -f services/airflow/docker-compose.yml up -d --build
+name: pmldl-airflow
+
+services:
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v3.16.0
+    container_name: pmldl-mlflow
+    command: >
+      mlflow server
+      --host 0.0.0.0 --port 5000
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --artifacts-destination /mlflow/artifacts
+      --serve-artifacts
+      --allowed-hosts mlflow:5000,localhost:5000,127.0.0.1:5000
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow-data:/mlflow
+    restart: unless-stopped
+
+  airflow:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pmldl-airflow:latest
+    container_name: pmldl-airflow
+    # root is needed to talk to the mounted Docker socket on Docker Desktop.
+    user: "0:0"
+    depends_on:
+      - mlflow
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/project/services/airflow/dags
+      AIRFLOW__LOGGING__BASE_LOG_FOLDER: /opt/project/services/airflow/logs
+      AIRFLOW__CORE__DEFAULT_TIMEZONE: utc
+      AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL: "30"
+      PROJECT_ROOT: /opt/project
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+      API_SMOKE_URL: http://host.docker.internal:8000
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ../../:/opt/project
+      - /var/run/docker.sock:/var/run/docker.sock
+      - airflow-home:/opt/airflow
+    ports:
+      - "8080:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command:
+      - bash
+      - -c
+      - |
+        airflow db migrate
+        airflow users create -r Admin -u admin -p admin \
+          -f Air -l Flow -e admin@example.com || true
+        exec airflow standalone
+    restart: unless-stopped
+
+volumes:
+  mlflow-data:
+  airflow-home:

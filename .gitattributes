@@ -1,0 +1,6 @@
+# Keep LF in working copies on every platform: the Airflow compose file embeds a
+# bash script that breaks on CRLF inside the container.
+* text=auto eol=lf
+
+*.pkl binary
+*.ipynb -text

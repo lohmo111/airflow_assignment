@@ -1,0 +1,61 @@
+{
+  "trained_at": "2026-09-17T08:45:24+00:00",
+  "model_type": "RandomForestClassifier",
+  "target": "species",
+  "classes": [
+    "Adelie",
+    "Chinstrap",
+    "Gentoo"
+  ],
+  "numeric_features": [
+    "bill_length_mm",
+    "bill_depth_mm",
+    "flipper_length_mm",
+    "body_mass_g"
+  ],
+  "categorical_features": [
+    "island",
+    "sex"
+  ],
+  "categories": {
+    "island": [
+      "Biscoe",
+      "Dream",
+      "Torgersen"
+    ],
+    "sex": [
+      "FEMALE",
+      "MALE"
+    ]
+  },
+  "numeric_ranges": {
+    "bill_length_mm": {
+      "min": 33.1,
+      "max": 59.6,
+      "mean": 44.07054545454546
+    },
+    "bill_depth_mm": {
+      "min": 13.1,
+      "max": 21.5,
+      "mean": 17.171636363636367
+    },
+    "flipper_length_mm": {
+      "min": 172.0,
+      "max": 231.0,
+      "mean": 200.8181818181818
+    },
+    "body_mass_g": {
+      "min": 2700.0,
+      "max": 6300.0,
+      "mean": 4210.090909090909
+    }
+  },
+  "metrics": {
+    "accuracy": 0.9855072463768116,
+    "f1_macro": 0.9828560296123126,
+    "precision_macro": 0.9777777777777779,
+    "recall_macro": 0.9888888888888889
+  },
+  "train_rows": 275,
+  "test_rows": 69
+}
